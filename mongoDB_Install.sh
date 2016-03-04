@@ -86,7 +86,7 @@ function setupReplSet(){
             member=("$SlaveName:$SlaveMongoPort")
             echo "rs.initiate()" | /usr/bin/mongo $MasterName:$MasterMongoPort
             sleep 3
-            for count in ${member[@]}
+            for count in $member
             do
                 echo "rs.add(\"$count\")" | /usr/bin/mongo $MasterName:$MasterMongoPort
                 sleep 3
