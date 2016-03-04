@@ -151,13 +151,18 @@ case $1 in
     uninstall|Uninstall|UNINSTALL)
         #echo "this will remove all mongo files!!!"
 
-        pkill -9 mongo
-        rm -rf /etc/mongo*
-        rm -rf /etc/init.d/mongo*
-        rm -rf /var/lib/mongo*
-        rm -rf /var/log/mongo*
-        rm -rf /usr/bin/mongo*
-        rm -rf /var/run/mongo*
+        if [ -f "/usr/bin/pkill" ]
+        then
+             pkill -9 mongod
+        else
+            kill -9 `ps aux | grep mongo | grep -v grep | awk -F" " '{print $2}'`
+            rm -rf /etc/mongo*
+            rm -rf /etc/init.d/mongo*
+            rm -rf /var/lib/mongo*
+            rm -rf /var/log/mongo*
+            rm -rf /usr/bin/mongo*
+            rm -rf /var/run/mongo*
+        fi
     ;;
 
     *)
