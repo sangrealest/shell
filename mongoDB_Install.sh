@@ -21,14 +21,13 @@ MongoConfigName='Database-Config'
 MongoConfigDBPath='/var/lib/mongodc'
 MongoConfiglogpath='/var/log/mongodc'
 MongoConfigPort='27014'
-#MongoConfigkeyFile = '/etc/mongodb.key'
 
 
 function createConfig(){
-    echo "Creating Mongo config file"
+#    read -p "please inpute role name(master/slave/arbiter)" role
     role=$1
     mongoConfig="./mongod-$role"
-    if [ ! -f "$mongoConfig ]
+    if [ ! -f "$mongoConfig" ]
     then
         echo "dbpath=/var/lib/mongodb-$role" >>$mongoConfig
         echo "logpath=/var/log/mongodb-$role/mongodb.log" >>$mongoConfig
@@ -52,6 +51,7 @@ function createConfig(){
 }
 
 function installMongoService(){
+    
     echo "installing mongoserver"
     if [ ! -f "/usr/bin/mongo" ]
     then
@@ -103,27 +103,27 @@ function setupReplSet(){
         *)
         exit 0
         ;;
+    esac
 }
-
 
 
 case $1 in
     master|Master|MASTER)
-        CreateConfig "master"
-        StartMongoInstall "master"
-        SetupReplicationSet "master"
+        createConfig "master"
+        installMongoService "master"
+        setupReplSet "master"
     ;;
 
     slave|Slave|SLAVE)
-        CreateConfig "slave"
-        StartMongoInstall "slave"
-        SetupReplicationSet "slave"
+        createConfig "slave"
+        installMongoService "slave"
+        setupReplSet "slave"
     ;;
 
     arbiter|Arbiter|ARBITER)
-        CreateConfig "arbiter"
-        StartMongoInstall "arbiter"
-        SetupReplicationSet "arbiter"
+        createConfig "arbiter"
+        installMongoService "arbiter"
+        setupReplSet "arbiter"
     ;;
 
     mongos|Mongos|MONGOS)
@@ -134,17 +134,17 @@ case $1 in
 
     all|All|ALL)
         #Install Slave
-        CreateConfig "slave"
-        StartMongoInstall "slave"
-        SetupReplicationSet "slave"
+        createConfig "slave"
+        installMongoService "slave"
+        setupReplSet "slave"
         #install Arbiter
-        CreateConfig "arbiter"
-        StartMongoInstall "arbiter"
-        SetupReplicationSet "arbiter"
+        createConfig "arbiter"
+        installMongoService "arbiter"
+        setupReplSet "arbiter"
         #Install Master
-        CreateConfig "master"
-        StartMongoInstall "master"
-        SetupReplicationSet "master"
+        createConfig "master"
+        installMongoService "master"
+        setupReplSet "master"
 
     ;;
 
