@@ -83,10 +83,10 @@ function setupReplSet(){
     echo "setup mongodb replicationset"
     case $1 in
         master|Master|MASTER)
-            member=("$SlaveName:$SlaveMongoPort")
+            member=("$MasterName:$MasterMongoPort" "$SlaveName:$SlaveMongoPort")
             echo "rs.initiate()" | /usr/bin/mongo $MasterName:$MasterMongoPort
             sleep 3
-            for count in $member
+            for count in ${member[@]}
             do
                 echo "rs.add(\"$count\")" | /usr/bin/mongo $MasterName:$MasterMongoPort
                 sleep 3
