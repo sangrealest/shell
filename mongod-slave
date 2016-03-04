@@ -1,0 +1,6 @@
+dbpath=/var/lib/mongodb-slave
+logpath=/var/log/mongodb-slave/mongodb.log
+logappend=true
+port = 27017
+nohttpinterface=true
+replSet = rs0
