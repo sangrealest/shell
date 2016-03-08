@@ -21,6 +21,7 @@ MongoConfigName='Database-Config'
 MongoConfigDBPath='/var/lib/mongodc'
 MongoConfiglogpath='/var/log/mongodc'
 MongoConfigPort='27014'
+MongoKeyFile='/etc/mongodb.key'
 
 
 function createConfig(){
@@ -32,6 +33,7 @@ function createConfig(){
         echo "dbpath=/var/lib/mongodb-$role" >>$mongoConfig
         echo "logpath=/var/log/mongodb-$role/mongodb.log" >>$mongoConfig
         echo "logappend=true" >>$mongoConfig
+        echo "keyFile=$MongoKeyFile" >>$mongoConfig
         if [ "$role" == "master" ]
         then
             echo "port = $MasterMongoPort" >>$mongoConfig
