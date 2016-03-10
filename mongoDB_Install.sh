@@ -5,6 +5,9 @@
 
 source ./mongo_config
 
+openssl rand -base64 741 >/etc/mongo.key
+chmod 600 /etc/mongo.key
+
 function createConfig(){
     role=$1
     mongoConfig="./mongod-$role"
