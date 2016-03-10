@@ -1,10 +1,10 @@
 #!/bin/bash
 
 #source /etc/mongod-start.conf
-DBLocation='/var/lib/mongodb-master/'
-LogFolder='/var/log/mongodb-master/'
-StartProcess='/usr/bin/mongod -f /etc/mongod-master'
-PidFile='/var/lib/mongodb-master/mongod-master.lock'
+DBLocation='/var/lib/mongodb-slave/'
+LogFolder='/var/log/mongodb-slave/'
+StartProcess='/usr/bin/mongod -f /etc/mongod-slave'
+PidFile='/var/lib/mongodb-slave/mongod-slave.lock'
 
 uid=`id | cut -d\( -f1 | cut -d= -f2`
 
