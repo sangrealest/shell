@@ -1,0 +1,22 @@
+SlaveIP='10.128.129.45'
+SlaveName='Databse-Slave'
+SlaveMongoPort='27017'
+
+ArbiterIP='10.128.129.46'
+ArbiterName='Database-Arbiter'
+ArbiterMongoPort='27017'
+
+MasterIP='10.128.129.44'
+MasterName='Database-Master'
+MasterMongoPort='27017'
+
+#Mongos config
+MongosPort='27015'
+
+#Mongo COnfig Server Config
+MongoConfigIP='127.0.0.1'
+MongoConfigName='Database-Config'
+MongoConfigDBPath='/var/lib/mongodc'
+MongoConfiglogpath='/var/log/mongodc'
+MongoConfigPort='27014'
+MongoKeyFile='/etc/mongodb.key'
