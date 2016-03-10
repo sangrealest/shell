@@ -3,7 +3,7 @@
 #source /etc/mongod-start.conf
 DBLocation='/var/lib/mongodb-master/'
 LogFolder='/var/log/mongodb-master/'
-StartProcess='/usr/bin/mongod -f /etc/mongod-master.conf'
+StartProcess='/usr/bin/mongod -f /etc/mongod-master'
 PidFile='/var/lib/mongodb-master/mongod-master.lock'
 
 uid=`id | cut -d\( -f1 | cut -d= -f2`

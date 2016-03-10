@@ -1,6 +1,0 @@
-dbpath=/var/lib/mongodb-master
-logpath=/var/log/mongodb-master/mongodb.log
-logappend=true
-port = 27017
-nohttpinterface=true
-replSet = rs0
