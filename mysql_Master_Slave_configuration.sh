@@ -4,68 +4,69 @@
 #Mysql master slave replication
 menu(){
     echo
-        echo
-        currentdate=$(date "+%Y-%m-%d %T")
-        cat<<EOF
-        DATE:$currentdate
-        ===============================
-        1)install software
-        2)configure the master
-        3)ocnfigure the slave
-        4)exit
-        ===============================
-        EOF
+    echo
+    currentdate=$(date "+%Y-%m-%d %T")
+    cat<<EOF
+    DATE:$currentdate
+    ===============================
+    1)install software
+    2)configure the master
+    3)ocnfigure the slave
+    4)exit
+    ===============================
+    EOF
 }
 
 function install(){
     if [ $UID ! -eq 0 ]
         then
-                 echo "you are not root, exit now"
-                      exit 1
-                      fi
-                      grep -q mysql /etc/passwd
-                      if [ $? -eq 0 ]
-                          then
-                              grep -q mysql /etc/group
-                              if [ $? ! -eq 0 ]
-                                  then
-                                       useradd -g mysql mysql
-                              fi
-                          echo "mysql user and group had exist!"
-                       else
-                            grep -q mysql /etc/group
-                            if [ $? ! -eq 0 ]
-                                then
-                                       groupadd mysql
-                                       useradd -g mysql mysql
-                            fi
-                        groupadd mysql
-                        fi
+            echo "you are not root, exit now"
+            exit 1
+    fi
+    grep -q mysql /etc/passwd
+    if [ $? -eq 0 ]
+         then
+             grep -q mysql /etc/group
+             if [ $? ! -eq 0 ]
+                 then
+                     useradd -g mysql mysql
+             fi
+             echo "mysql user and group had exist!"
+     else
+         grep -q mysql /etc/group
+         if [ $? ! -eq 0 ]
+             then
+                 groupadd mysql
+                 useradd -g mysql mysql
+         fi
+         groupadd mysql
+     fi
 
-               if [ -s mysql-5.1.45.tar.gz ]
-                   then
-                        echo "mysql-5.1.45.tar.gz file found"
-                        tar zxvf mysql-5.1.45.tar.gz
-                        cd mysql-5.1.45
-                       ./configure --prefix=/usr/local/mysql --enable-local-infile\
-                       --with-charset=utf8  --with-extra-charsets=all --enable-thread-safe-client\
-                       --enable-assembler --with-unix-socket-path=/usr/local/mysql/tmp/mysql.sock\
-                       --with-plugins=innobase
-                       make && make install
-                       else
-                       echo "no mysql found, exit"
-                       exit 1
-                       fi
-                       cp support-files/my-medium.cnf /etc/my.cnf
-                       sed -i 's/skip-locking/skip-external-locking/' /etc/etc.my.cnf
-                       cd /usr/local/mysql
-                       bin/mysql_install_db --user=mysql
-                       mkdir tmp
-                       chown -R root  .
-                       chown -R mysql var
-                       chown -R mysql tmp
-                       chgrp -R mysql .
-                       bin/mysqld_safe --user=mysql &
+     if [ -s mysql-5.1.45.tar.gz ]
+         then
+             echo "mysql-5.1.45.tar.gz file found"
+             tar zxvf mysql-5.1.45.tar.gz
+             cd mysql-5.1.45
+             ./configure --prefix=/usr/local/mysql --enable-local-infile\
+             --with-charset=utf8  --with-extra-charsets=all --enable-thread-safe-client\
+             --enable-assembler --with-unix-socket-path=/usr/local/mysql/tmp/mysql.sock\
+             --with-plugins=innobase
+             make && make install
+      else
+          echo "no mysql found, exit"
+          exit 1
+      fi
+      cp support-files/my-medium.cnf /etc/my.cnf
+      sed -i 's/skip-locking/skip-external-locking/' /etc/etc.my.cnf
+      cd /usr/local/mysql
+      bin/mysql_install_db --user=mysql
+      mkdir tmp
+      chown -R root  .
+      chown -R mysql var
+      chown -R mysql tmp
+      chgrp -R mysql .
+      bin/mysqld_safe --user=mysql &
+}
 
 function configmaster(){
 cat >/etc/my.cnf<<EOF
@@ -146,12 +147,12 @@ binlog-do-db=testdb
 read-only=0
 binlog-ignore-db=mysql
 EOF
-
 }
+
 while :
 do
 menu
-echo -n " Please choose [1-7]:"
+echo -n " Please choose [1-4]:"
 read choose
 case $choose in
 1)install;;
