@@ -72,10 +72,10 @@ function configZsh(){
    
 }
 function main(){
-checkOs
-installSoftware
-downloadFile
-configZsh
-installAutojump
+    checkOs
+    installSoftware
+    downloadFile
+    configZsh
+    installAutojump
 }
 main
