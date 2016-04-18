@@ -1,4 +1,5 @@
 #!/bin/bash
+#define your servers in HostList file.
 
 shopt -s -o nounset
 
