@@ -1,5 +1,6 @@
 #!/bin/bash
 
+#under the directory have toplist program and gamesys.conf 2016040{1..9}* db folders, with the program, every time run it there should be the db folder named dbhomewdb
 
 for ((i=4;i<=15;i++))
 do
