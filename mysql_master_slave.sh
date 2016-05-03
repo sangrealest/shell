@@ -12,7 +12,7 @@ cat<<EOF
                1)install software
                2)configure the master
                3)ocnfigure the slave
-                           4)exit
+               4)exit
                ===============================
 EOF
 }
@@ -155,13 +155,22 @@ do
      echo -n " Please choose [1-4]:"
      read choose
      case $choose in
-        1)install;;
-        2)configmaster;;
-        3)configslave;;
-        4)exit ;;
+        1)
+        install
+        ;;
+        2)
+        configmaster
+        ;;
+        3)
+        configslave
+        ;;
+        4)
+        exit
+        ;;
         *)
         clear
-        continue;;
+        continue
+        ;;
      esac
 done
 
