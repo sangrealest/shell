@@ -43,7 +43,7 @@ fi
 function setConf(){
 
 sed  -i  "/\/usr\/local\/mysql${PORT}\/bin/"d /etc/profile
-echo "export PATH=/usr/local/mysql${PORT}/bin:\$PATH ">>/etc/profile
+echo "export PATH=/usr/local/mysql${PORT}/bin:\$PATH ">> ~/.bashrc
 sudo /sbin/sysctl -p
 
 cp -a  mysql.server /etc/init.d/mysqld${PORT}
@@ -134,7 +134,7 @@ fi
 
 
 #before install mysql, clear potential folders
-rm -rf /etc/init.d/mysql${PORT}
+rm -rf /etc/init.d/mysqld${PORT}
 rm -rf /data/mysql${PORT}
 rm -rf /usr/local/mysql${PORT}
 
@@ -206,13 +206,13 @@ secureMysql
 
 if [ "$FLAG" -eq 0  ]
 then
-    echo -e "\033[31m  数据库安装完毕 \033[0m"
-    echo -e "\033[32m 1、安装脚本已经将mysql设为系统的自启动服务器 \033[0m"
-    echo -e "\033[32m 2、mysql服务管理工具使用方法：/etc/init.d/mysqld${PORT}  {start|stop|restart|reload|force-reload|status}  \033[0m"
-    echo -e "\033[32m 3、mysql命令的全路径: /usr/local/mysql${PORT}/bin/mysql  \033[0m"
-    echo -e "\033[32m 4、重开一个session，可使用mysql -S  /tmp/mysql${PORT}.sock  -uroot -p 进入mysql。  \033[0m"
-    echo -e "\033[32m 5、数据库的root密码: $PWD  \033[0m"
+    echo -e "\033[31m  successfully installed mysql \033[0m"
+    echo -e "\033[32m 1、already added mysqld to system autostart \033[0m"
+    echo -e "\033[32m 2、mysql usage /etc/init.d/mysqld${PORT}  {start|stop|restart|reload|force-reload|status}  \033[0m"
+    echo -e "\033[32m 3、mysql path: /usr/local/mysql${PORT}/bin/mysql  \033[0m"
+    echo -e "\033[32m 4、open a new session， use mysql -S  /tmp/mysql${PORT}.sock  -uroot -p 进入mysql。  \033[0m"
+    echo -e "\033[32m 5、the password of root is : $PWD  \033[0m"
 else
-    echo -e "\033[31m \033[05m 数据库安装失败 \033[0m"
+    echo -e "\033[31m \033[05m failed to install mysql \033[0m"
     exit 1
 fi

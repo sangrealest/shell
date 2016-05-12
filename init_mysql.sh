@@ -20,36 +20,35 @@ EOF
 exit
 }
 function repSetWithoutPwd(){
-#授权slave 所需的用户
 
     ssh   $MASTER "/usr/local/mysql/bin/mysql  -e \"grant replication slave on *.* to mysqlrepl@'$SLAVE' identified by 'mysqlrepl'\" "
 
-    #开始备份 MASTER 数据库数据
-    echo -e "\033[31m##`date +"%Y-%m-%d %H:%M:%S"` 开始备份 $MASTER 数据 \033[0m"
+    #start backup database of MASTER
+    echo -e "\033[31m##`date +"%Y-%m-%d %H:%M:%S"` start to backup $MASTER  data \033[0m"
     mkdir -p data
     BAKFILE="data/${MASTER}_`date +'%Y%m%d_%H_%M'`.bak"
     DATABASES=`ssh   $MASTER "/usr/local/mysql/bin/mysql  -N -e 'show databases'|egrep -v 'information_schema|performance_schema'"`
     DATABASES=`echo $DATABASES`
     ssh   $MASTER "/usr/local/mysql/bin/mysqldump -vv -hlocalhost  --skip-opt --create-options --add-drop-table --single-transaction -q -e --set-charset --master-data=2 -K -R --triggers --hex-blob --events  --databases  $DATABASES  " > $BAKFILE
     if [ "$?" -ne 0 ];then
-        echo -e "\033[31m\033[05m备份$MASTER数据失败 \033[0m"
+        echo -e "\033[31m\033[05m backup $MASTER data failed  \033[0m"
         exit
     fi
 
 
-    echo -e "\033[31m##`date +"%Y-%m-%d %H:%M:%S"` 备份$MASTER数据结束 \033[0m"
+    echo -e "\033[31m##`date +"%Y-%m-%d %H:%M:%S"`  backup $MASTER data finished \033[0m"
 
-    #将master备份数据导入slave数据库
-    echo -e "\033[31m##`date +"%Y-%m-%d %H:%M:%S"` 开始导入$MASTER的数据到$SLAVE \033[0m"
+    #import master  database to slave 
+    echo -e "\033[31m##`date +"%Y-%m-%d %H:%M:%S"`  start imoprt $MASTER的 data to $SLAVE \033[0m"
     set -o pipefail
     ssh   $SLAVE "$MYSQLBIN/mysql -vvv  -S /tmp/mysql/mysql${PORT}.sock" < $BAKFILE|grep -A 5 INSERT|sed 's/VALUES.*//g'
 
     if [ "$?" -ne 0 ];then
-        echo -e "\033[31m\033[05m导入$MASTER的数据到$SALVE失败 \033[0m"
+        echo -e "\033[31m\033[05m import $MASTER的 data to $SALVE failed  \033[0m"
         exit
     fi
 
-    echo -e "\033[31m##`date +"%Y-%m-%d %H:%M:%S"` 导入$MASTER的数据到$SLAVE结束\033[0m"
+    echo -e "\033[31m##`date +"%Y-%m-%d %H:%M:%S"`  import $MASTER的 data to $SLAVE finished \033[0m"
 
     LOGPOS=`head -n 30  $BAKFILE|egrep 'CHANGE MASTER' |sed 's/-- CHANGE MASTER TO//g'`
     ssh   $SLAVE "$MYSQLBIN/mysql  -S /tmp/mysql/mysql${PORT}.sock -e \" stop slave;change master to  master_host='$MASTER', master_user='mysqlrepl',master_password='mysqlrepl', $LOGPOS start slave  \""
@@ -60,36 +59,36 @@ function repSetWithoutPwd(){
 
 }
 function repSetWithPwd(){
-   #授权slave 所需的用户
+
    ssh   $MASTER "/usr/local/mysql/bin/mysql -uroot -p'$PWD' -e \"grant replication slave on *.* to mysqlrepl@'$SLAVE' identified by 'mysqlrepl'\" "
 
-   #开始备份 MASTER 数据库数据
-   echo -e "\033[31m##`date +"%Y-%m-%d %H:%M:%S"` 开始备份 $MASTER 数据 \033[0m"
+   #start to backup MASTER  database  data
+   echo -e "\033[31m##`date +"%Y-%m-%d %H:%M:%S"` start to backup $MASTER  data \033[0m"
    mkdir -p data
    BAKFILE="data/${MASTER}_`date +'%Y%m%d_%H_%M'`.bak"
    DATABASES=`ssh   $MASTER "/usr/local/mysql/bin/mysql -uroot -p'$PWD' -N -e 'show databases'|egrep -v 'information_schema|performance_schema'"`
    DATABASES=`echo $DATABASES`
    ssh   $MASTER "/usr/local/mysql/bin/mysqldump -uroot -p'$PWD' -vv -hlocalhost  --skip-opt --create-options --add-drop-table --single-transaction -q -e --set-charset --master-data=2 -K -R --triggers --events  --hex-blob   --databases $DATABASES  " > $BAKFILE
    if [ "$?" -ne 0 ];then
-       echo -e "\033[31m\033[05m备份$MASTER数据失败 \033[0m"
+       echo -e "\033[31m\033[05m backup $MASTER data failed  \033[0m"
        exit
    fi
 
 
-   echo -e "\033[31m##`date +"%Y-%m-%d %H:%M:%S"` 备份$MASTER数据结束 \033[0m"
+   echo -e "\033[31m##`date +"%Y-%m-%d %H:%M:%S"`  backup $MASTER data finished  \033[0m"
 
-   #将master备份数据导入slave数据库
-   echo -e "\033[31m##`date +"%Y-%m-%d %H:%M:%S"` 开始导入$MASTER的数据到$SLAVE \033[0m"
+   #import master's data to slave database 
+   echo -e "\033[31m##`date +"%Y-%m-%d %H:%M:%S"`  start  import $MASTER data to $SLAVE \033[0m"
    set -o pipefail
    ssh   $SLAVE "$MYSQLBIN/mysql -vvv -uroot -p'$PWD'  -S /tmp/mysql/mysql${PORT}.sock" < $BAKFILE|grep -A 5 INSERT|sed 's/VALUES.*//g'
 
    if [ "$?" -ne 0 ];then
-       echo -e "\033[31m\033[05m导入$MASTER的数据到$SALVE失败 \033[0m"
+       echo -e "\033[31m\033[05m import $MASTER的 data to $SALVE failed  \033[0m"
        exit
    fi
-   echo -e "\033[31m##`date +"%Y-%m-%d %H:%M:%S"` 导入$MASTER的数据到$SLAVE结束\033[0m"
+   echo -e "\033[31m##`date +"%Y-%m-%d %H:%M:%S"`  import $MASTER的 data to $SLAVE finished \033[0m"
 
-   #主从配置
+   #Master-Slave Replication
    LOGPOS=`head -n 30  $BAKFILE|egrep 'CHANGE MASTER' |sed 's/-- CHANGE MASTER TO//g'`
    ssh   $SLAVE "$MYSQLBIN/mysql -uroot -p'$PWD' -S /tmp/mysql/mysql${PORT}.sock -e \" stop slave;change master to  master_host='$MASTER', master_user='mysqlrepl',master_password='mysqlrepl', $LOGPOS start slave  \""
    sleep 2
@@ -242,7 +241,7 @@ if [ "$SLAVE" != '' -a "$MASTER" != '' -a "$FLAG" -eq 1 ];then
 #    MASTER=`/bin/ping $MASTER -c 1  |grep "PING"| awk -F ') ' '{print $1}'|awk -F "(" '{print $2}' |head -n 1`
 #    SLAVE=`/bin/ping $SLAVE -c 1  |grep "PING"| awk -F ') ' '{print $1}'|awk -F "(" '{print $2}' |head -n 1`
     MYSQLBIN="/usr/local/mysql${PORT}/bin"
-    echo -e "\033[31m## $(date +"%Y-%m-%d %H:%M:%S") 开始 $MASTER ${SLAVE} 主从复制配置  \033[0m"
+    echo -e "\033[31m## $(date +"%Y-%m-%d %H:%M:%S")  start  $MASTER ${SLAVE} Master_Slave Replication \033[0m"
     if [ "$PWD" == '' ];then
         repSetWithoutPwd
     
@@ -252,14 +251,14 @@ if [ "$SLAVE" != '' -a "$MASTER" != '' -a "$FLAG" -eq 1 ];then
     fi
     
     if [ "$PNUM" -eq 2 ];then
-        echo -e "\033[31m##`date +"%Y-%m-%d %H:%M:%S"` $MASTER $SLAVE 主从复制成功 \033[0m"
+        echo -e "\033[31m##`date +"%Y-%m-%d %H:%M:%S"` $MASTER $SLAVE replication successfully \033[0m"
         test -f $BAKFILE && rm -rf $BAKFILE
     else
-        echo -e "\033[31m\033[05m##`date +"%Y-%m-%d %H:%M:%S"` $MASTER $SLAVE 主从复制失败 \033[0m"
+        echo -e "\033[31m\033[05m##`date +"%Y-%m-%d %H:%M:%S"` $MASTER $SLAVE replication failed  \033[0m"
         echo $LASTERR
         test -f $BAKFILE && rm -rf $BAKFILE
         exit
     fi
 
-    echo -e "\033[31m##`date +"%Y-%m-%d %H:%M:%S"` $MASTER $SLAVE 主从复制配置结束 \033[0m"
+    echo -e "\033[31m##`date +"%Y-%m-%d %H:%M:%S"` $MASTER $SLAVE Master Slave Replication finished  \033[0m"
 fi
