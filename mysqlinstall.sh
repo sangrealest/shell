@@ -6,6 +6,7 @@
 #set -x
 #set -u
 
+
 function usage(){
     cat <<EOF
 
@@ -21,8 +22,6 @@ exit
 }
 
 
-NUM=''
-PORT=''
 
 function limitsConf(){
 sed -i "/nproc/d"  /etc/security/limits.conf
@@ -44,7 +43,7 @@ function setConf(){
 
 sed  -i  "/\/usr\/local\/mysql${PORT}\/bin/"d /etc/profile
 echo "export PATH=/usr/local/mysql${PORT}/bin:\$PATH ">> ~/.bashrc
-sudo /sbin/sysctl -p
+/sbin/sysctl -p
 
 cp -a  mysql.server /etc/init.d/mysqld${PORT}
 
@@ -69,14 +68,14 @@ if [ "$TYPE" == 'slave' ];then
     mysqldir=/usr/local/mysql${PORT}/bin
     $mysqldir/mysql -S /tmp/mysql${PORT}.sock   -e "delete from mysql.user where user='';"
     $mysqldir/mysql -S /tmp/mysql${PORT}.sock    -e "delete from mysql.user where host='';"
-    $mysqldir/mysql -S /tmp/mysql${PORT}.sock    -e "grant all on *.* to root@'127.0.0.1' identified by '$PWD'"
-    $mysqldir/mysqladmin -S /tmp/mysql${PORT}.sock    password  $PWD
+    $mysqldir/mysql -S /tmp/mysql${PORT}.sock    -e "grant all on *.* to root@'127.0.0.1' identified by '$PSWD'"
+    $mysqldir/mysqladmin -S /tmp/mysql${PORT}.sock    password  $PSWD
 
-    if [ "$PWD" == '' ];then
+    if [ "$PSWD" == '' ];then
         /usr/local/mysql${PORT}/bin/mysql -S /tmp/mysql${PORT}.sock -e "use mysql"
         FLAG=$?
     else
-        /usr/local/mysql${PORT}/bin/mysql -S /tmp/mysql${PORT}.sock  -uroot -p$PWD  -e "use mysql"
+        /usr/local/mysql${PORT}/bin/mysql -S /tmp/mysql${PORT}.sock  -uroot -p$PSWD  -e "use mysql"
         FLAG=$?
     fi
 
@@ -84,20 +83,24 @@ else
     mysqldir=/usr/local/mysql/bin
     $mysqldir/mysql  -e "delete from mysql.user where user='';"
     $mysqldir/mysql  -e "delete from mysql.user where host='';"
-    $mysqldir/mysql  -e "grant all on *.* to root@'127.0.0.1' identified by '$PWD'"
-    $mysqldir/mysqladmin  password  $PWD
+    $mysqldir/mysql  -e "grant all on *.* to root@'127.0.0.1' identified by '$PSWD'"
+    $mysqldir/mysqladmin  password  $PSWD
 
-    if [ "$PWD" == '' ];then
+    if [ "$PSWD" == '' ];then
         /usr/local/mysql${PORT}/bin/mysql   -e "use mysql"
         FLAG=$?
     else
-        /usr/local/mysql${PORT}/bin/mysql  -uroot -p$PWD  -e "use mysql"
+        /usr/local/mysql${PORT}/bin/mysql  -uroot -p$PSWD  -e "use mysql"
         FLAG=$?
     fi
 
 fi
 }
 
+echo "run here before getopts============================================================"
+
+NUM=''
+PORT=''
 while getopts ":t:n:p:t:h" opts
 do
     case $opts in
@@ -115,7 +118,7 @@ do
             NUM=$OPTARG
             ;;
         p)
-            PWD=$OPTARG
+            PSWD=$OPTARG
             ;;
         :)
             echo "No argument value for option $OPTARG"
@@ -131,7 +134,6 @@ done
 if [[ $NUM != '' ]];then
     PORT=`expr 3305 + $NUM`
 fi
-
 
 #before install mysql, clear potential folders
 rm -rf /etc/init.d/mysqld${PORT}
@@ -168,8 +170,6 @@ fi
 mv -f $MYSQLDIR/* /usr/local/mysql${PORT}
 rm -rf $MYSQLDIR
 
-chown -R mysql:mysql /usr/local/mysql${PORT}
-chown -R mysql:mysql /data/mysql${PORT}
 
 FREEMEM1=$(awk 'NR==1{print int($2/1024*0.2)}' /proc/meminfo)
 INNODB_BUTTER_POOL_SIZE_SLAVE=$(echo $FREEMEM1|awk '{if($1 > 1024) {printf "%d%s" ,int($1/1024),"G" } else {printf "%d%s",($1),"M"} }')
@@ -183,18 +183,23 @@ if [ "$TYPE" == 'slave' ]
 then
     cp -a myconfile /usr/local/mysql${PORT}/my.cnf
     sed -i '/^server-id/ c server-id = 2' /usr/local/mysql${PORT}/my.cnf
-    sed -i "s#/data/mysql/#/data/mysql${PORT}/#" /usr/local/mysql${PORT}/my.cnf
+    sed -i "s#/var/log/mysql#/data/mysql${PORT}#" /usr/local/mysql${PORT}/my.cnf
     sed -i "/^socket/ c socket     = /tmp/mysql${PORT}.sock" /usr/local/mysql${PORT}/my.cnf
     sed -i "/^port/ c port =  ${PORT}"  /usr/local/mysql${PORT}/my.cnf
     sed -i "/^innodb_buffer_pool_size/ c innodb_buffer_pool_size = ${INNODB_BUTTER_POOL_SIZE_SLAVE}" /usr/local/mysql${PORT}/my.cnf
 
     setConf
-else
+elif [ "$TYPE" == 'master' ]
+then
     cp -a myconfile /etc/my.cnf
-    sed -i -i "/^innodb_buffer_pool_size/ c innodb_buffer_pool_size = ${INNODB_BUTTER_POOL_SIZE_MASTER}" /etc/my.cnf
+    sed -i "/^innodb_buffer_pool_size/ c innodb_buffer_pool_size = ${INNODB_BUTTER_POOL_SIZE_MASTER}" /etc/my.cnf
+    sed -i "s#/var/log#/data#" /etc/my.cnf
     setConf
+    
 
 fi
+chown -R mysql:mysql /usr/local/mysql${PORT}
+chown -R mysql:mysql /data/mysql${PORT}
 
 /usr/local/mysql${PORT}/scripts/mysql_install_db  --basedir=/usr/local/mysql${PORT} --datadir=/data/mysql${PORT}/mysqldata/data  --user=mysql
 
@@ -206,12 +211,12 @@ secureMysql
 
 if [ "$FLAG" -eq 0  ]
 then
-    echo -e "\033[31m  successfully installed mysql \033[0m"
-    echo -e "\033[32m 1、already added mysqld to system autostart \033[0m"
-    echo -e "\033[32m 2、mysql usage /etc/init.d/mysqld${PORT}  {start|stop|restart|reload|force-reload|status}  \033[0m"
-    echo -e "\033[32m 3、mysql path: /usr/local/mysql${PORT}/bin/mysql  \033[0m"
-    echo -e "\033[32m 4、open a new session， use mysql -S  /tmp/mysql${PORT}.sock  -uroot -p 进入mysql。  \033[0m"
-    echo -e "\033[32m 5、the password of root is : $PWD  \033[0m"
+    echo -e "\033[35m finished installation Mysql \033[0m"
+    echo -e "\033[35m 1. already set chkconfig mysqld on \033[0m"
+    echo -e "\033[35m 2. usage /etc/init.d/mysqld${PORT} {start|stop|restart|reload|force-relad|status} \033[0m"
+    echo -e "\033[35m 3. the path of mysql /usr/loca/mysql${PORT}/bin/mysql \033[0m"
+    echo -e "\033[35m 4. open a new session use mysql -S /tmp/mysql${PORT}.sock -uroot -p enter mysql. \033[0m"
+    echo -e "\033[35m 5. the password of root :$PSWD \033[0m"
 else
     echo -e "\033[31m \033[05m failed to install mysql \033[0m"
     exit 1
