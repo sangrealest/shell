@@ -23,7 +23,7 @@ function repSetWithoutPSWD(){
 
     ssh   $MASTER "/usr/local/mysql/bin/mysql  -e \"GRANT REPLICATION slave on *.* to mysqlrepl@'$SLAVE' identified by 'mysqlrepl' WITH GRANT OPTION\" "
 
-    #start backup database of MASTER
+    #start to backup database of MASTER
     echo -e "\033[32m##`date +"%Y-%m-%d %H:%M:%S"` start to backup $MASTER  data \033[0m"
     mkdir -p data
     BAKFILE="data/${MASTER}_`date +'%Y%m%d_%H_%M'`.bak"
@@ -38,7 +38,7 @@ function repSetWithoutPSWD(){
 
     echo -e "\033[35m##`date +"%Y-%m-%d %H:%M:%S"`  backup $MASTER data finished \033[0m"
 
-    #import master  database to slave 
+    #import master's database to slave 
     echo -e "\033[32m##`date +"%Y-%m-%d %H:%M:%S"`  start imoprt $MASTER's data to $SLAVE \033[0m"
     set -o pipefail
     ssh   $SLAVE "$MYSQLBIN/mysql -vvv  -S /tmp/mysql${PORT}.sock" < $BAKFILE|grep -A 5 INSERT|sed 's/VALUES.*//g'
@@ -239,13 +239,15 @@ fi
 
 if [ "$SLAVE" != '' -a "$MASTER" != '' -a "$FLAG" -eq 1 ];then
 
-#    MASTER=`/bin/ping $MASTER -c 1  |grep "PING"| awk -F ') ' '{print $1}'|awk -F "(" '{print $2}' |head -n 1`
-#    SLAVE=`/bin/ping $SLAVE -c 1  |grep "PING"| awk -F ') ' '{print $1}'|awk -F "(" '{print $2}' |head -n 1`
+#must use ip address to grant replication;
+#get master and slave ip address
+
     MASTER=`/bin/ping $MASTER -c 1  |grep "PING"| awk -F ') ' '{print $1}'|awk -F "(" '{print $2}' |head -n 1`
     SLAVE=`/bin/ping $SLAVE -c 1  |grep "PING"| awk -F ') ' '{print $1}'|awk -F "(" '{print $2}' |head -n 1`
     MYSQLBIN="/usr/local/mysql${PORT}/bin"
     echo -e "\033[32m## $(date +"%Y-%m-%d %H:%M:%S")  start  $MASTER ${SLAVE} Master_Slave Replication \033[0m"
     if [ "$PSWD" == '' ];then
+
         repSetWithoutPSWD
     
     else
@@ -255,11 +257,15 @@ if [ "$SLAVE" != '' -a "$MASTER" != '' -a "$FLAG" -eq 1 ];then
     
     if [ "$PNUM" -eq 2 ];then
         echo -e "\033[35m##`date +"%Y-%m-%d %H:%M:%S"` $MASTER $SLAVE replication successfully \033[0m"
-#        test -f $BAKFILE && rm -rf $BAKFILE
+        if [ -f $BAKFILE ];then
+            rm -rf $BAKFILE
+        fi
     else
         echo -e "\033[31m\033[05m##`date +"%Y-%m-%d %H:%M:%S"` $MASTER $SLAVE replication failed  \033[0m"
         echo $LASTERR
-#        test -f $BAKFILE && rm -rf $BAKFILE
+        if [ -f $BAKFILE ];then
+            rm -rf $BAKFILE
+        fi
         exit
     fi
 

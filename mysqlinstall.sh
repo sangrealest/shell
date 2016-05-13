@@ -42,7 +42,9 @@ fi
 function setConf(){
 
 sed  -i  "/\/usr\/local\/mysql${PORT}\/bin/"d /etc/profile
+
 echo "export PATH=/usr/local/mysql${PORT}/bin:\$PATH ">> ~/.bashrc
+
 /sbin/sysctl -p
 
 cp -a  mysql.server /etc/init.d/mysqld${PORT}
@@ -97,10 +99,10 @@ else
 fi
 }
 
-echo "run here before getopts============================================================"
 
 NUM=''
 PORT=''
+
 while getopts ":t:n:p:t:h" opts
 do
     case $opts in
@@ -142,12 +144,12 @@ rm -rf /usr/local/mysql${PORT}
 
 grep mysql /etc/passwd >/dev/null
 
-if [ "$?" -ne 0 ]
-then
+if [ "$?" -ne 0 ];then
     useradd mysql
 fi
 
 if [ ! -d /usr/loal/mysql${PORT} ];then
+
         mkdir /usr/local/mysql${PORT}
 fi
 
@@ -155,6 +157,7 @@ for i in redolog slowquery binlog relaylog
 do
     mkdir -p /data/mysql${PORT}/mysqllog/$i
 done
+
 for j in data ibdata
 do
     mkdir -p /data/mysql${PORT}/mysqldata/$j
@@ -189,15 +192,18 @@ then
     sed -i "/^innodb_buffer_pool_size/ c innodb_buffer_pool_size = ${INNODB_BUTTER_POOL_SIZE_SLAVE}" /usr/local/mysql${PORT}/my.cnf
 
     setConf
+
 elif [ "$TYPE" == 'master' ]
+
 then
     cp -a myconfile /etc/my.cnf
     sed -i "/^innodb_buffer_pool_size/ c innodb_buffer_pool_size = ${INNODB_BUTTER_POOL_SIZE_MASTER}" /etc/my.cnf
     sed -i "s#/var/log#/data#" /etc/my.cnf
+
     setConf
-    
 
 fi
+
 chown -R mysql:mysql /usr/local/mysql${PORT}
 chown -R mysql:mysql /data/mysql${PORT}
 
