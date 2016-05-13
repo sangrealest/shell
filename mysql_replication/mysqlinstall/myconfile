@@ -1,0 +1,157 @@
+# Example MySQL config file for very large systems.
+#
+# This is for a large system with memory of 1G-2G where the system runs mainly
+# MySQL.
+#
+# You can copy this file to
+# /etc/my.cnf to set global options,
+# mysql-data-dir/my.cnf to set server-specific options (in this
+# installation this directory is /var/log/mysql/mysql/var) or
+# ~/.my.cnf to set user-specific options.
+#
+# In this file, you can use all long options that a program supports.
+# If you want to know which options a program supports, run the program
+# with the "--help" option.
+
+# The following options will be passed to all MySQL clients
+[client]
+port               = 3306
+socket             = /tmp/mysql.sock
+default-character-set =utf8mb4
+
+[mysql]
+prompt="(\u@\h:)[\d]> "
+
+# Here follows entries for some specific programs
+
+# The MySQL server
+[mysqld]
+user= mysql
+port= 3306
+socket=/tmp/mysql.sock
+datadir="/var/log/mysql/mysqldata/data"     
+
+skip-external-locking
+skip-name-resolve
+
+#global_parameter_setting
+
+
+default_storage_engine = InnoDB
+character-set-server = utf8mb4
+max_length_for_sort_data= 2048
+
+table_open_cache = 1024   
+sort_buffer_size = 16M
+read_buffer_size = 16M
+max_tmp_tables = 2000
+thread_cache_size = 5000
+wait_timeout=2592000
+interactive_timeout=2592000
+net_read_timeout = 300
+net_write_timeout =300
+
+
+max_connections = 5000 
+max_allowed_packet = 32M
+event_scheduler=1
+lower_case_table_names=1
+open_files_limit=60000
+
+back_log=200
+log_warnings = 2
+
+tmp_table_size = 128M
+max_heap_table_size = 128M
+
+
+key_buffer_size = 10M
+query_cache_size = 0
+query_cache_type = 0
+concurrent_insert =2
+bulk_insert_buffer_size=32M
+# required unique id between 1 and 2^32 - 1
+# defaults to 1 if master-host is not set
+# but will not function as a master if omitted
+server-id = 1
+
+
+###Uncomment the following if you are using InnoDB tables
+
+# You can set .._buffer_pool_size up to 50 - 80 %
+# of RAM but beware of setting memory usage too high
+innodb_buffer_pool_size = 201M
+innodb_additional_mem_pool_size = 16M
+innodb_file_per_table=1  
+innodb_data_home_dir       = /var/log/mysql/mysqldata/ibdata
+innodb_data_file_path      = ibdata1:1G:autoextend
+innodb_log_group_home_dir  = /var/log/mysql/mysqllog/redolog
+##Set .._log_file_size to 25 % of buffer pool size
+innodb_log_file_size       = 512M
+innodb_log_buffer_size     = 32M
+innodb_log_files_in_group  = 4
+innodb_flush_log_at_trx_commit =0 
+innodb_flush_method = O_DIRECT
+innodb_max_dirty_pages_pct  = 60
+innodb_adaptive_flushing    = 1
+innodb_old_blocks_pct       = 37
+innodb_old_blocks_time      = 1000
+
+innodb_use_native_aio       = 1
+innodb_use_sys_malloc       = 1
+innodb_thread_concurrency   = 0
+innodb_purge_threads        = 1
+innodb_purge_batch_size     = 300
+innodb_change_buffering     = all    
+innodb_file_format_check    = 1
+innodb_stats_on_metadata    = 0
+
+
+innodb_lock_wait_timeout = 10
+innodb_io_capacity=200
+innodb_read_io_threads=8
+innodb_write_io_threads =16
+innodb_file_format = barracuda
+#innodb_file_format_check = barracuda
+innodb_open_files=30000
+
+######slowquery
+slow_query_log = 0
+slow_query_log_file = /var/log/mysql/mysqllog/slowquery/slow-query.log
+log-queries-not-using-indexes= true
+long_query_time  = 1
+
+##### Replication Master Server (default)
+##### binary logging is required for replication
+log-bin          = /var/log/mysql/mysqllog/binlog/mysql-bin.bin
+binlog_format= MIXED
+max-binlog-size  = 512M
+expire_logs_days = 3
+binlog_cache_size = 32M
+log_bin_trust_function_creators =1
+
+
+#####slave log
+relay-log=/var/log/mysql/mysqllog/relaylog/relay-log.bin
+relay-log-index=/var/log/mysql/mysqllog/relaylog/relay-log.index
+relay-log-info-file=/var/log/mysql/mysqllog/relaylog/relay-log.info
+
+
+[mysqldump]
+quick
+max_allowed_packet = 32M
+
+[isamchk]
+key_buffer = 128M
+sort_buffer_size = 256M
+read_buffer = 2M
+write_buffer = 2M
+
+[myisamchk]
+key_buffer = 128M
+sort_buffer_size = 256M
+read_buffer = 2M
+write_buffer = 2M
+
+[mysqlhotcopy]
+interactive-timeout
