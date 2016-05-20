@@ -9,10 +9,10 @@ echo "-i    the method of iptables, ie: I for add one rule or D for Delete one r
 echo "-s    the source ip address"
 echo "-f    the filename of source file"
 echo "-d    the dest path"
-echo "$0 -s 183.136.229.71 -f newrelease.tgz -d /export/tmp/shanker/mergedb/ -i I"
-echo "add one iptables rule, $0 -s 183.136.229.71 -i I"
-echo "delete the iptables rule, $0 -s 183.136.229.71 -i D"
-echo "Don't forget to delete the iptables rules you opened"
+echo "$0 -s ipaddress -f newrelease.tgz -d /export/tmp/shanker/mergedb/ -i I"
+echo "add one iptables rule, $0 -s ipaddress -i I"
+echo "delete the iptables rule, $0 -s ipaddress -i D"
+eaho "Don't forget to delete the iptables rules you opened"
 echo "=============================================================================="
 }
 
