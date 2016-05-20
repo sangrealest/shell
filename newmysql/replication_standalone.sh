@@ -3,8 +3,8 @@
 set -x
 #set -u
 
-MASTER="52.192.254.77"
-SLAVE="129.41.154.37"
+MASTER="52.192.*.*"
+SLAVE="129.41.*.*"
 MYSQLBIN="/usr/bin"
 PSWD="yourpasswordhere"
 
