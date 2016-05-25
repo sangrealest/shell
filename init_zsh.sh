@@ -44,7 +44,7 @@ else
 fi
 
 zshPath="`which zsh`"
-
+user=$(whoami)
 }
 function downloadFile(){
     cd ~
@@ -67,7 +67,7 @@ function configZsh(){
     then
         mv .zsh_history{.,backup}
     fi
-    sudo chsh -s "$zshPath"
+    sudo usermod -s "$zshPath" $user
     cp ~/initzsh/zshrc ~/.zshrc
    
 }
