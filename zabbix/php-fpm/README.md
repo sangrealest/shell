@@ -1,12 +1,12 @@
 Template of php-fpm
 
-Configure php-fpm
+1. Configure php-fpm
  
 Uncomment pm.status_path in your php-fpm pool's configuration file
 
 pm.status_path = /php-fpm_status
 
-Configure Nginx
+2. Configure Nginx
  
 Add bellow to your Nginx Configuration:
 
