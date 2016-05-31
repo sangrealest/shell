@@ -1,18 +1,10 @@
-#Get Mysql version 
-UserParameter=mysql.version,mysql -V
-# Get mysql status
-UserParameter=mysql.status[*],  bash /etc/zabbix/scripts/chk_mysql.sh $1
-# mysql running status
-UserParameter=mysql.ping,mysqladmin -uzabbix -pzabbix -P3306 -h127.0.0.1  ping | grep -c alive
-#Mysql use the default template provided by Zabbix official.
+UserParameter=iostat[*],                 bash /etc/zabbix/scripts/zabbix_iostat_check.sh    $1 $2
+UserParameter=custom.vfs.dev.discovery, bash /etc/zabbix/scripts/dev_discovery.sh
 
-#Get the status of Nginx
-UserParameter=nginx.status[*],  bash /etc/zabbix/scripts/nginx.sh $1
-
-#vmstat check
 UserParameter=vmstat[*],        bash /etc/zabbix/scripts/zabbix_vmstat_check.sh    $1
+UserParameter=nginx.status[*],      bash /etc/zabbix/scripts/zabbix_nginx_check.sh $1
 
-#iostat check
-UserParameter=iostat[*],        bash /etc/zabbix/scripts/zabbix_iostat_check.sh    $1 $2
-UserParameter=custom.vfs.dev.discovery,     bash /etc/zabbix/scripts/dev_discovery.sh
-
+UserParameter=mysql.version,mysql -V
+UserParameter=mysql.status[*],/etc/zabbix/scripts/zabbix_mysql_check.sh $1
+UserParameter=mysql.ping,mysqladmin -uusername -ppassword -P3306 -h127.0.0.1  ping | grep -c alive
+UserParameter=php-fpm[*],       bash    /etc/zabbix/scripts/zabbix_php-fpm_check.sh "$1" "$2"
