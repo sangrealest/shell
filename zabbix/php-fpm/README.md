@@ -1,16 +1,18 @@
 Template of php-fpm
 
-1. Configure php-fpm
+Configure php-fpm
+ 
 Uncomment pm.status_path in your php-fpm pool's configuration file
 
 pm.status_path = /php-fpm_status
 
-2. Configure Nginx
+Configure Nginx
+ 
 Add bellow to your Nginx Configuration:
 
 server {
-    listen 800;
 
+    listen 800;
     location /php-fpm_status {
         fastcgi_pass 127.0.0.1:9000;
         fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
