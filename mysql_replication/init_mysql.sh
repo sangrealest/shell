@@ -19,6 +19,7 @@ usage:$0 [options] [pattern]
 EOF
 exit
 }
+
 function repSetWithoutPSWD(){
 
     ssh   $MASTER "/usr/local/mysql/bin/mysql  -e \"GRANT REPLICATION slave on *.* to mysqlrepl@'$SLAVE' identified by 'mysqlrepl' WITH GRANT OPTION\" "
