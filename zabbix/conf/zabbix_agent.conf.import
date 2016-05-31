@@ -10,10 +10,9 @@ UserParameter=mysql.ping,mysqladmin -uzabbix -pzabbix -P3306 -h127.0.0.1  ping |
 UserParameter=nginx.status[*],  bash /etc/zabbix/scripts/nginx.sh $1
 
 #vmstat check
-UserParameter=vmstat[*],        bash /usr/share/zabbix/scripts/zabbix_vmstat_check.sh    $1
+UserParameter=vmstat[*],        bash /etc/zabbix/scripts/zabbix_vmstat_check.sh    $1
 
 #iostat check
-UserParameter=iostat[*],        bash /usr/share/zabbix/scripts/zabbix_iostat_check.sh    $1 $2
-UserParameter=custom.vfs.dev.discovery,     bash /usr/local/zabbix/scripts/dev_discovery.sh
-
+UserParameter=iostat[*],        bash /etc/zabbix/scripts/zabbix_iostat_check.sh    $1 $2
+UserParameter=custom.vfs.dev.discovery,     bash /etc/zabbix/scripts/dev_discovery.sh
 
