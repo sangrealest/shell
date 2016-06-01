@@ -2,6 +2,7 @@
 #author:shanker
 #date:2012/4/12
 #Mysql master slave replication
+#Deprecated, please refer to mysql folder
 menu(){
 echo
 echo

@@ -2,15 +2,12 @@
 #intruder_detect
 #detect the invlaid users
 
-AUTHLOG=/var/log/syslog
-if [ -n "$1" ]
-then
-    AUTHLOG=$1
-    echo "Using log file:$AUTHLOG"
-    fi
+path=$1
+AUTHLOG=${path:=/var/log/auth.log}
     LOG=/tmp/valid.$$.log
     grep -vi "invalid" "$AUTHLOG" > $LOG
-    users=$(grep "Failed password" $LOG | awk '{print $(NF - 5)}'|sort -u)
+#    users=$(grep "Failed password" $LOG | awk '{print $(NF - 5)}'|sort -u)
+    users=$(grep "err" $LOG | awk '{print $(NF - 5)}'|sort -u)
     printf "%-5s|%-10s|%-10s|%-13s|%-33s|%s\n"  "Sr#" "User" "Attempts" "IP address" "Host_mapping" "Time Range"
     ucount=0
     ip_list="$(egrep -o "[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+" $LOG |sort -u)"
@@ -38,4 +35,3 @@ then
          done
     done
 rm /tmp/valid.$$.log /tmp/$$.log /tmp/$$.time /tmp/temp.$$.log 2>/dev/null
-                              
