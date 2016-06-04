@@ -1,7 +1,8 @@
 #!/bin/bash
 #Author:Shanker
+#set -e
+#set -u
 #set -x
-#set -o nounset
 
 source ./mongo_config
 
