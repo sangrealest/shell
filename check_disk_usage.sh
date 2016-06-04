@@ -54,3 +54,4 @@ do
                         ;;
         esac
 done
+usage
