@@ -109,7 +109,6 @@ os=$(uname -i)
               alias ..='cd ..'
               alias ll='ls -altr'
               export PATH=$PATH:/sbin:.
-              export TMOUT=1000000
 
               function mkcd(){
                   mkdir -p $1
