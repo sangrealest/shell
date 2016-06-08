@@ -24,7 +24,7 @@ fi
 
 while read line
 do
-    lsof -p $line|awk '{print $9}' >>/tmp/cache.files 
+    lsof -p $line 2>/dev/null |awk '{print $9}' >>/tmp/cache.files 
 done</tmp/cache.pids
 
 
