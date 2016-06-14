@@ -476,40 +476,6 @@ reboot
 
                                        groupadd -g 506 adgroup
 
-                                       adduser olgierd.ziolko -u 531 -g users -G wheel -p '$1$hnPhDNrF$APd7gXG/1bTa2dgO5xy93.'
-                                       echo 'ssh-rsa AAAAB3NzaC1yc2EAAAABJQAAAIEAprt0/lL+3zQP4OtO51cpyVGeLK00CxY8o8cxgv9XfXNux+liRysEiH5bqu8x/e9KiigHig+2+76kE2tSEvZZ/06lnvel2jWngWMjvt5Glv4co2LfXMT1+ZvRRc/IJ/iKi41oCrcB3MCKi9vUnzk/mjBV4Ysljwgy6rg+ZkoKWZs= olgierd@phorm-20121001' | tee -a /var/lib/ssh_pubkeys/olgierd.ziolko.pub >/dev/null
-                                       chmod 644 /var/lib/ssh_pubkeys/olgierd.ziolko.pub
-                                          
-
-                                       adduser aduser -u 506 -g adgroup -G wheel -p '!!'
-                                       echo 'ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAorBiQ+pO0b6G6y3sDBOx5UkDcrh1r7pg+3wzAQdz5Akegz9O0cDgnazTiPslI+mKpZVMX4EvDyxdwlqP/dgzMszzkArb71ujZDzyXU+71+jhSCQXLlzdCxP hKHJVvCfGpp/YPMmFxsifD8uJsW69ClL74xT82kHZRKcOgGPJDW3ytIcxyZBhGYx+yzQ0CeVvT3jmgF54qHE9wADelDZnfeezgTtWgv8WlgncffCjkoJA0MtuFn/CdigU5FzbBGN70IlPukK0jpGBfkgrg3iSonyW+KCFqjyzQeulext+5uULIskW0KJ4v2ZPbLzjdTjvD P+Z717qOFJdC9P7cBROOw== aduser@cn10proadbe00' | tee -a /var/lib/ssh_pubkeys/aduser.pub >/dev/null
-                                       chmod 644 /var/lib/ssh_pubkeys/aduser.pub
-                                          
-
-                                       adduser leo.li -u 533 -g users -G wheel -p '$1$X7nq5rgN$Ozivz9q8hPsaeEL/YnTrD0'
-                                       echo 'ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAuLIL7bb3Ek7Ie6bDETPwVVkcf4bGtiyi5nNVB2o67i45+DqyW7WTMBufbQPEmg56QmEof63805QWXiZ04GnF0sgSKvwAgRO3ScBqoKWHlir9wqdsTZhgg5kbdg5bwZN+YsIJ9mkBSTUibmer63AvE89uPMLe+ddC9ws2iejRQkLD64bMvNVUQA6BNpA7mCUKqRcJP+AbqjZyHNEaXowySUXn64qrRIABJSHXeiWVSIR5dd0gyhXDVQkMzrtcRHaTMmLMKy0CGzYaUlSxJ7CJEu7DT+EJkrN6xL5MBqFGDkxwJaFq6PniQUMJtn9Xxg4wDDXHeqeYWqTfW8ArkYvPaQ==' | tee -a /var/lib/ssh_pubkeys/leo.li.pub >/dev/null
-                                       chmod 644 /var/lib/ssh_pubkeys/leo.li.pub
-                                          
-
-                                       adduser billy.zheng -u 534 -g users -G wheel -p '$1$XeoAYl1y$Z/GehZ1CGtdj0zoLYtxHn.'
-                                       echo 'ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA1qkDQs3pNKsXY9RAwtfdtHowInr2Cio7ajBq9lKhlNKiDZ4ya2Y0tXQx6NpfjuNpcrh5AkfVCp9kKhvl5oGLdh6G2Z/UH0OFzhOhQp5vqcOhR4NAlU /DF9sw9oj2Yw0qbCUzx/y5TtCEKKvou9+B5SLf9IJNyqHU7VPwE6qoh4VUdHMWa4uF/in3835JHhtKD0bPlhaKYR9Uym47x07bQfaKE/LfiL1Nd3XazuvTOTkDbyh43nVPUfWmin2EpDdHcG1KNHtPMUumxyKJhtF07UPR3+cpA1j+0XaIIDqAg4uPtCzykdnbwj+f338v T5FbYNx0Dj2ARuEVEbxzauo2tw==' | tee -a /var/lib/ssh_pubkeys/billy.zheng.pub >/dev/null
-                                       chmod 644 /var/lib/ssh_pubkeys/billy.zheng.pub
-                                          
-
-                                       adduser ivan.vinitskyy -u 532 -g users -G wheel -p '$1$EiAarB8K$..J3fcVEU.MA6CBdHhvQK1'
-                                       echo 'ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA0qKvNvSw8ftyF9CnoHQISesOVcJROhg9RUbLCmCdphC87sTY4eLDUcP/K1hioDFL17MRewhBcfTETtjz+uXyB+5LUHh1dzPp+jw13JC1iJQEGy+lIONUlr8JLY4Uud6fDe24uwgEfQKZPRKeoAxsehjc6zgvq+jiM6yRHZg9kNaY+w69okcgw1qWUFvNCtamdK2LJFdqelwkxtuTeb+w/wyTqOMhkVZvDXw33/tHwwkurk2phjH4r/sJJcUgmjzEJfl8XdkhMxqbLY0ZU4UXB23mpd4OOQffsQeOMrNJ5wMyWsbOXVZCEh2xFB5nfIXzQhvfoO0Zitx65gixclgvvQ== ivan.vinitskyy@phorm.com' | tee -a /var/lib/ssh_pubkeys/ivan.vinitskyy.pub >/dev/null
-                                       chmod 644 /var/lib/ssh_pubkeys/ivan.vinitskyy.pub
-                                          
-
-                                       adduser tibor.racz -u 535 -g users -G wheel -p '$1$JNwFDHj8$YVIxYFvRxij90xy.7YBpn/'
-                                       echo 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDQACbaQ4Kvbe7EqzS0vlSNViOdOPqgDLHVZ2r3ssrqe46aZW189yjw2nlQ5bQpnGm/zvurMx5EN3JYvIyG0rtAEnEzMYThoykiRDgzH8JIs6OSAznJ0eNhjbpPLf/U6F6G0dWTmSD8FGvIurbDknjBRMGcxlZH3MsXbTdRw6wmK4IBX5ElaXvJU8nGqdBJG4qHeqNOhi6gzqJrURoijTtmWTFzkE+NjJDmxFuayV9FuI8N5z6TuNDiD+IIJjq5kLfPl1AKIpijhenqT7MK+CGKVbd9nqmoyaEO3Gm2OPQGinKUPHfggKGII71UOeGzCouRYoKQfBHzo+zs0Zgs3fq3 Tibor' | tee -a /var/lib/ssh_pubkeys/tibor.racz.pub >/dev/null
-                                       chmod 644 /var/lib/ssh_pubkeys/tibor.racz.pub
-                                          
-
-                                       adduser byron.sorgdrager -u 501 -g users -G wheel -p '$1$9RFPVew3$Wqifm2WeVvqEeGz/S.VbO0'
-                                       echo 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC2I9ud12FttTCh97WgnPmJx7Zkzv1vNycUtnEaGi4Hl+lcS2NSwwP0p/GdWRQezjCvSpf0+pr7vZc0cqsSjNCg8YAxMYgfkPqx4NFMUocs9a674avvRj+DPnggUh7sMkDHy+U395DFTlg3je+xTq+/dYcHzpndCGvh57rEVjZhO6KioGHVAjWUhlkABLWPdym9dZIvvW5LKTzhd5MtUfSzTmDt/5KqBmu7x4rnlDVrcxcFavY7fRpsgkOLt2mCsi/0CiWe6MYwOGnMu2Rc4gvqcrvrteR9ya6IRZ3gwr2ejbMpZlxCuG2rODsI4GYrvxbIYyXcn+78vuIXkMhukYzH benyg@valjean' | tee -a /var/lib/ssh_pubkeys/byron.sorgdrager.pub >/dev/null
-                                       chmod 644 /var/lib/ssh_pubkeys/byron.sorgdrager.pub
-                                          
 #send all root mail to admins
                                        echo 'root:           noc@phorm.com' >> /etc/aliases
 
