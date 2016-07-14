@@ -1,0 +1,19 @@
+
+       CODE   NORMAL   HEADER
+       %C     pcpu     %CPU
+       %G     group    GROUP
+       %P     ppid     PPID
+       %U     user     USER
+       %a     args     COMMAND
+       %c     comm     COMMAND
+       %g     rgroup   RGROUP
+       %n     nice     NI
+       %p     pid      PID
+       %r     pgid     PGID
+       %t     etime    ELAPSED
+       %u     ruser    RUSER
+       %x     time     TIME
+       %y     tty      TTY
+       %z     vsz      VSZ
+              state    state of the command  
+ps -e -o pid,comm,state| grep Z | grep -v grep |cud -d' ' -f1|xargx kill -9

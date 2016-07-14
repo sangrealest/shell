@@ -31,7 +31,13 @@ do
 done
 
 MYSQLBIN="/usr/bin"
+<<<<<<< HEAD:mysql_repl_useful.sh
 ssh $MASTER "/usr/bin/mysql -uroot -p'$PSWD' -e \"GRANT REPLICATION slave on *.* to mysqlrepl@'$SLAVE' identified by 'mysqlrepl' WITH GRANT OPTION\" "
+=======
+PSWD="yourpasswordhere"
+
+ssh $MASTER "/usr/bin/mysql -uroot -p'$PSWD' -e \"GRANT REPLICATION SLAVE ON *.* to mysqlrepl@'$SLAVE' identified by 'mysqlrepl' WITH GRANT OPTION\" "
+>>>>>>> dce6ef690f07959660c269968e6a3df67c3018d3:mysql_replication_standalone.sh
 
 #start to backup MASTER  database  data
 echo -e "\033[32m##`date +"%Y-%m-%d %H:%M:%S"` start to backup $MASTER  data \033[0m"
