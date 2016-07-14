@@ -8,7 +8,7 @@ SLAVE="129.41.*.*"
 MYSQLBIN="/usr/bin"
 PSWD="yourpasswordhere"
 
-ssh $MASTER "/usr/bin/mysql -uroot -p'$PSWD' -e \"GRANT REPLICATION slave on *.* to mysqlrepl@'$SLAVE' identified by 'mysqlrepl' WITH GRANT OPTION\" "
+ssh $MASTER "/usr/bin/mysql -uroot -p'$PSWD' -e \"GRANT REPLICATION SLAVE ON *.* to mysqlrepl@'$SLAVE' identified by 'mysqlrepl' WITH GRANT OPTION\" "
 
 #start to backup MASTER  database  data
 echo -e "\033[32m##`date +"%Y-%m-%d %H:%M:%S"` start to backup $MASTER  data \033[0m"
