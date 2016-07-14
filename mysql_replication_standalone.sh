@@ -6,12 +6,30 @@ set -x
 #Configure your slave server yourself
 #Make sure your slave use the same password as master which you put herer PSWD
 
+while getopts ":m:s:ph" opts
+do
+    case $opts in
+        h)
+            echo "Input -m master ip address"
+            echo "Input -s slave ip address"
+            echo " Input -p password of your mysql"
+            ;;
+        m)
+            MASTER=$OPTARG
+            ;;
+        s)
+            SLAVE=$OPTARG
+            ;;
+        p)
+            PSWD=$OPTARG
+            ;;
+        *)
+            -$OPTARG unvlalid
+            ;;
+    esac
+done
 
-MASTER="52.192.*.*"
-SLAVE="129.41.*.*"
 MYSQLBIN="/usr/bin"
-PSWD="yourpasswordhere"
-
 ssh $MASTER "/usr/bin/mysql -uroot -p'$PSWD' -e \"GRANT REPLICATION slave on *.* to mysqlrepl@'$SLAVE' identified by 'mysqlrepl' WITH GRANT OPTION\" "
 
 #start to backup MASTER  database  data
