@@ -24,7 +24,8 @@ do
             PSWD=$OPTARG
             ;;
         *)
-            -$OPTARG unvlalid
+            -$OPTARG unvalid
+            exit 2
             ;;
     esac
 done
