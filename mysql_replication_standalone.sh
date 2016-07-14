@@ -2,6 +2,10 @@
 #Author:Shanker
 set -x
 #set -u
+#must use ip address to do replication
+#Configure your slave server yourself
+#Make sure your slave use the same password as master which you put herer PSWD
+
 
 MASTER="52.192.*.*"
 SLAVE="129.41.*.*"
