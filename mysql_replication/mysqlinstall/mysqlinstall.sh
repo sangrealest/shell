@@ -19,84 +19,89 @@ usage:$0 [options] [pattern]
     -f  Do not install mysql, only configre master-slave;
 EOF
 exit
+
 }
 
 
 
 function limitsConf(){
-sed -i "/nproc/d"  /etc/security/limits.conf
-sed -i "/nofile/d"  /etc/security/limits.conf
-echo "*        soft    nproc           65535" >> /etc/security/limits.conf
-echo "*        hard    nproc           65535" >> /etc/security/limits.conf
-echo "*        soft    nofile           65535" >> /etc/security/limits.conf
-echo "*        hard    nofile           65535" >> /etc/security/limits.conf
 
-if [ -f /etc/security/limits.d/90-nproc.conf ]
-then
-  sed -i "/nproc/d"  /etc/security/limits.d/90-nproc.conf
-  echo "*        soft    nproc           65535" >> /etc/security/limits.d/90-nproc.conf
-  echo "*        hard    nproc           65535" >> /etc/security/limits.d/90-nproc.conf
-fi
+    sed -i "/nproc/d"  /etc/security/limits.conf
+    sed -i "/nofile/d"  /etc/security/limits.conf
+    echo "*        soft    nproc           65535" >> /etc/security/limits.conf
+    echo "*        hard    nproc           65535" >> /etc/security/limits.conf
+    echo "*        soft    nofile           65535" >> /etc/security/limits.conf
+    echo "*        hard    nofile           65535" >> /etc/security/limits.conf
+    
+    if [ -f /etc/security/limits.d/90-nproc.conf ]
+    
+    then
+      sed -i "/nproc/d"  /etc/security/limits.d/90-nproc.conf
+      echo "*        soft    nproc           65535" >> /etc/security/limits.d/90-nproc.conf
+      echo "*        hard    nproc           65535" >> /etc/security/limits.d/90-nproc.conf
+    fi
+    
 }
 
 function setConf(){
 
-sed  -i  "/\/usr\/local\/mysql${PORT}\/bin/"d /etc/profile
-
-echo "export PATH=/usr/local/mysql${PORT}/bin:\$PATH ">> ~/.bashrc
-
-/sbin/sysctl -p
-
-cp -a  mysql.server /etc/init.d/mysqld${PORT}
-
-sed -i "s#/usr/local/mysql#/usr/local/mysql${PORT}#" /etc/init.d/mysqld${PORT}
-
-sed -i "s#/data/mysql/mysqldata/data#/data/mysql${PORT}/mysqldata/data#" /etc/init.d/mysqld${PORT}
-
+    sed  -i  "/\/usr\/local\/mysql${PORT}\/bin/"d /etc/profile
+    
+    echo "export PATH=/usr/local/mysql${PORT}/bin:\$PATH ">> ~/.bashrc
+    
+    /sbin/sysctl -p
+    
+    cp -a  mysql.server /etc/init.d/mysqld${PORT}
+    
+    sed -i "s#/usr/local/mysql#/usr/local/mysql${PORT}#" /etc/init.d/mysqld${PORT}
+    
+    sed -i "s#/data/mysql/mysqldata/data#/data/mysql${PORT}/mysqldata/data#" /etc/init.d/mysqld${PORT}
+    
 }
 
 function startMysql(){
 
-chmod +x /etc/init.d/mysqld${PORT}
-/sbin/chkconfig --add mysqld${PORT}
-/sbin/chkconfig mysqld${PORT} on
-/etc/init.d/mysqld${PORT} start
-
+    chmod +x /etc/init.d/mysqld${PORT}
+    /sbin/chkconfig --add mysqld${PORT}
+    /sbin/chkconfig mysqld${PORT} on
+    /etc/init.d/mysqld${PORT} start
+    
 }
 
 function secureMysql(){
 
-if [ "$TYPE" == 'slave' ];then
-    mysqldir=/usr/local/mysql${PORT}/bin
-    $mysqldir/mysql -S /tmp/mysql${PORT}.sock   -e "delete from mysql.user where user='';"
-    $mysqldir/mysql -S /tmp/mysql${PORT}.sock    -e "delete from mysql.user where host='';"
-    $mysqldir/mysql -S /tmp/mysql${PORT}.sock    -e "grant all on *.* to root@'127.0.0.1' identified by '$PSWD'"
-    $mysqldir/mysqladmin -S /tmp/mysql${PORT}.sock    password  $PSWD
-
-    if [ "$PSWD" == '' ];then
-        /usr/local/mysql${PORT}/bin/mysql -S /tmp/mysql${PORT}.sock -e "use mysql"
-        FLAG=$?
+    if [ "$TYPE" == 'slave' ];then
+        mysqldir=/usr/local/mysql${PORT}/bin
+        $mysqldir/mysql -S /tmp/mysql${PORT}.sock   -e "delete from mysql.user where user='';"
+        $mysqldir/mysql -S /tmp/mysql${PORT}.sock    -e "delete from mysql.user where host='';"
+        $mysqldir/mysql -S /tmp/mysql${PORT}.sock    -e "grant all on *.* to root@'127.0.0.1' identified by '$PSWD'"
+        $mysqldir/mysqladmin -S /tmp/mysql${PORT}.sock    password  $PSWD
+    
+        if [ "$PSWD" == '' ];then
+            /usr/local/mysql${PORT}/bin/mysql -S /tmp/mysql${PORT}.sock -e "use mysql"
+            FLAG=$?
+        else
+            /usr/local/mysql${PORT}/bin/mysql -S /tmp/mysql${PORT}.sock  -uroot -p$PSWD  -e "use mysql"
+            FLAG=$?
+        fi
+    
     else
-        /usr/local/mysql${PORT}/bin/mysql -S /tmp/mysql${PORT}.sock  -uroot -p$PSWD  -e "use mysql"
-        FLAG=$?
+        mysqldir=/usr/local/mysql/bin
+        $mysqldir/mysql  -e "delete from mysql.user where user='';"
+        $mysqldir/mysql  -e "delete from mysql.user where host='';"
+        $mysqldir/mysql  -e "grant all on *.* to root@'127.0.0.1' identified by '$PSWD'"
+        $mysqldir/mysqladmin  password  $PSWD
+    
+        if [ "$PSWD" == '' ];then
+            /usr/local/mysql${PORT}/bin/mysql   -e "use mysql"
+            FLAG=$?
+        else
+            /usr/local/mysql${PORT}/bin/mysql  -uroot -p$PSWD  -e "use mysql"
+            FLAG=$?
+        fi
+    
     fi
 
-else
-    mysqldir=/usr/local/mysql/bin
-    $mysqldir/mysql  -e "delete from mysql.user where user='';"
-    $mysqldir/mysql  -e "delete from mysql.user where host='';"
-    $mysqldir/mysql  -e "grant all on *.* to root@'127.0.0.1' identified by '$PSWD'"
-    $mysqldir/mysqladmin  password  $PSWD
-
-    if [ "$PSWD" == '' ];then
-        /usr/local/mysql${PORT}/bin/mysql   -e "use mysql"
-        FLAG=$?
-    else
-        /usr/local/mysql${PORT}/bin/mysql  -uroot -p$PSWD  -e "use mysql"
-        FLAG=$?
-    fi
-
-fi
 }
 
 
@@ -133,11 +138,14 @@ do
     esac
 done
 
-if [[ $NUM != '' ]];then
+if [[ $NUM != '' ]]
+then
+
     PORT=`expr 3305 + $NUM`
 fi
 
-#before install mysql, clear potential folders
+#######################before install mysql, clear potential folders#####################
+
 rm -rf /etc/init.d/mysqld${PORT}
 rm -rf /data/mysql${PORT}
 rm -rf /usr/local/mysql${PORT}
@@ -154,11 +162,14 @@ if [ ! -d /usr/loal/mysql${PORT} ];then
 fi
 
 for i in redolog slowquery binlog relaylog
+
 do
     mkdir -p /data/mysql${PORT}/mysqllog/$i
+
 done
 
 for j in data ibdata
+
 do
     mkdir -p /data/mysql${PORT}/mysqldata/$j
 done
@@ -216,6 +227,7 @@ startMysql
 secureMysql
 
 if [ "$FLAG" -eq 0  ]
+
 then
     echo -e "\033[35m finished installation Mysql \033[0m"
     echo -e "\033[35m 1. already set chkconfig mysqld on \033[0m"
