@@ -317,6 +317,7 @@ bindkey "\e\e" sudo-command-line
 #}}}
  
 #命令别名 {{{
+alias apl='ansible-playbook'
 alias cp='cp -i'
 alias mv='mv -i'
 alias rm='rm -i'
@@ -325,7 +326,7 @@ alias grep='grep --color=auto -i'
 alias vi='vim'
 alias ll='ls  --color=auto -hltr'
 alias la='ls --color=auto -alhtr'
-alias dstat='dstat -lpcmdnsy --top-io --top-mem --top-cpu '
+alias dstat='dstat -lpcmdnsy --top-io --top-mem --top-cpu --top-bio'
 alias ..='cd ..'
 alias gad='git add -A'
 alias gco='git commit -m $1'
@@ -347,7 +348,7 @@ alias mm='getstock sh000001 sz399001 sz399006 sz002631 sz002180 sh600570 sz15019
 alias egrepv='egrep -v "^$|^#"'
 #tmux alias
 alias ta='tmux attach -t'
-alias ts='tmux new-session -s'
+alias tn='tmux new-session -s'
 alias tl='tmux list-sessions'
 alias tksv='tmux kill-server'
 alias tkss='tmux kill-session -t'
@@ -532,10 +533,13 @@ dbu() { docker build -t=$1 .; }
 dalias() { alias | grep 'docker' | sed "s/^\([^=]*\)=\(.*\)/\1 => \2/"| sed "s/['|\']//g" | sort; }
 
 # Bash into running container
-alias ping='nali-ping'
-alias dig='nali-dig'
-alias nslookup='nali-nslookup'
-alias traceroute='nali-traceroute'
-alias tracepath-'nali-tracepath'
-alias mtr='function _mtr(){ mtr $@ | nali; }; _mtr'
-alias iftop='iftop -B -i'
+#alias ping='nali-ping'
+#alias dig='nali-dig'
+#alias nslookup='nali-nslookup'
+#alias traceroute='nali-traceroute'
+#alias tracepath-'nali-tracepath'
+#alias mtr='function _mtr(){ mtr $@ | nali; }; _mtr'
+
+
+[[ -s ~/.autojump/etc/profile.d/autojump.sh ]] && source ~/.autojump/etc/profile.d/autojump.sh
+autoload -U compinit && compinit -u
