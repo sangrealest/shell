@@ -18,6 +18,7 @@ echo ""
 #    echo "Need root to run is, try with sudo"
 #    exit 1
 #fi
+
 function checkOs(){
     if [ -f /etc/redhat-release ]
     then
@@ -38,37 +39,43 @@ function installSoftware(){
 
 if [ "$OS" == 'CentOS' ]
 then
-	sudo yum -y install zsh git 
+	sudo yum -y install zsh git vim
 else
-	sudo apt-get -y install zsh git
+	sudo apt-get -y install zsh git vim
 fi
 
 zshPath="`which zsh`"
 user=$(whoami)
 }
+
 function downloadFile(){
     cd ~
     git clone https://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh
     git clone https://github.com/joelthelion/autojump.git
+    git clone https://github.com/sangrealest/zsh-autosuggestions.git ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions
     git clone https://github.com/sangrealest/initzsh 
 }
+
 function installAutojump(){
     cd ~/autojump
-    ./install.py
-cat >>~/.zshrc<<EOF
-[[ -s ~/.autojump/etc/profile.d/autojump.sh ]] && source ~/.autojump/etc/profile.d/autojump.sh
-autoload -U compinit && compinit -u
-EOF
+    python install.py
+
+#cat >>~/.zshrc<<EOF
+#[[ -s ~/.autojump/etc/profile.d/autojump.sh ]] && source ~/.autojump/etc/profile.d/autojump.sh
+#autoload -U compinit && compinit -u
+#EOF
 
 }
 
 function configZsh(){
-    if [ -f ".zsh_history" ]
+    if [ -f "~/.zsh_history" ]
     then
-        mv .zsh_history{.,backup}
+        mv ~/.zsh_history{.,backup}
     fi
     sudo usermod -s "$zshPath" $user
     cp ~/initzsh/zshrc ~/.zshrc
+    cp ~/initzsh/vimrc ~/.vimrc
+    chmod -R 755 ~/.oh-my-zsh/custom/plugins
    
 }
 function main(){
