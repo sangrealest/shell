@@ -39,7 +39,7 @@ function installSoftware(){
 
 if [ "$OS" == 'CentOS' ]
 then
-	sudo yum -y install zsh git vim
+	sudo yum -y -q install zsh git vim
 else
 	sudo apt-get -y install zsh git vim
 fi
@@ -50,15 +50,34 @@ user=$(whoami)
 
 function downloadFile(){
     cd ~
-    git clone https://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh
-    git clone https://github.com/joelthelion/autojump.git
-    git clone https://github.com/sangrealest/zsh-autosuggestions.git ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions
-    git clone https://github.com/sangrealest/initzsh 
+    if [ ! -d ~/.oh-my-zsh ]
+    then
+        git clone https://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh
+    fi
+
+    if [ ! -d ~/autojump ]
+    then
+        git clone https://github.com/joelthelion/autojump.git
+    fi
+
+    if [ ! -d ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions ]
+    then
+        git clone https://github.com/sangrealest/zsh-autosuggestions.git ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions
+    fi
+
+    if [ ! -d ~/initzsh ]
+    then
+        git clone https://github.com/sangrealest/initzsh 
+    fi
 }
 
 function installAutojump(){
-    cd ~/autojump
-    python install.py
+    autojump_path=$(which autojump)
+    if [ $? -ne 0 ]
+    then
+        cd ~/autojump
+        python install.py
+    fi
 
 #cat >>~/.zshrc<<EOF
 #[[ -s ~/.autojump/etc/profile.d/autojump.sh ]] && source ~/.autojump/etc/profile.d/autojump.sh
