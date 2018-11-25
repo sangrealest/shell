@@ -74,15 +74,33 @@ function configZsh(){
     fi
     sudo usermod -s "$zshPath" $user
     cp ~/initzsh/zshrc ~/.zshrc
-    cp ~/initzsh/vimrc ~/.vimrc
     chmod -R 755 ~/.oh-my-zsh/custom/plugins
    
 }
+
+function configGitconfig(){
+    if [ -f "~/.gitconfig" ]
+    then
+        echo "Backing up your ~/.gitconfig file now"
+        mv ~/.gitconfig ~/.gitconfig.backup.`date +%F`
+        cp ~/initzsh/gitconfig ~/.gitconfig
+}
+
+function configVim(){
+    if [ -f "~/.vimrc" ]
+    then
+        echo "Backing up your ~/.vimrc file now"
+        mv ~/.vimrc ~/.vimrc.backup.`date +%F`
+        cp ~/initzsh/vimrc ~/.vimrc
+}
+
 function main(){
     checkOs
     installSoftware
     downloadFile
     configZsh
+    configGitconfig
+    configVim
     installAutojump
 }
 main
