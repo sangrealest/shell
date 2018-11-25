@@ -84,6 +84,7 @@ function configGitconfig(){
         echo "Backing up your ~/.gitconfig file now"
         mv ~/.gitconfig ~/.gitconfig.backup.`date +%F`
         cp ~/initzsh/gitconfig ~/.gitconfig
+    fi
 }
 
 function configVim(){
@@ -92,6 +93,7 @@ function configVim(){
         echo "Backing up your ~/.vimrc file now"
         mv ~/.vimrc ~/.vimrc.backup.`date +%F`
         cp ~/initzsh/vimrc ~/.vimrc
+    fi
 }
 
 function main(){
